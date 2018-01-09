@@ -62,7 +62,7 @@ namespace Shadowsocks.Model
                 if (config.configs.Count == 0)
                     config.configs.Add(GetDefaultServer());
                 if (config.localPort == 0)
-                    config.localPort = 1080;
+                    config.localPort = 8888;
                 if (config.index == -1 && config.strategy == null)
                     config.index = 0;
                 if (config.logViewer == null)
@@ -84,7 +84,7 @@ namespace Shadowsocks.Model
                 {
                     index = 0,
                     isDefault = true,
-                    localPort = 1080,
+                    localPort = 8888,
                     autoCheckUpdate = true,
                     configs = new List<Server>()
                     {
