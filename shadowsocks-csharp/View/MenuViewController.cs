@@ -263,15 +263,15 @@ namespace Shadowsocks.View
                     this.PACModeItem = CreateMenuItem("PAC", new EventHandler(this.PACModeItem_Click)),
                     this.globalModeItem = CreateMenuItem("Global", new EventHandler(this.GlobalModeItem_Click))
                 }),
-                this.ServersItem = CreateMenuGroup("Servers", new MenuItem[] {
-                    this.SeperatorItem = new MenuItem("-"),
-                    this.ConfigItem = CreateMenuItem("Edit Servers...", new EventHandler(this.Config_Click)),
-                    CreateMenuItem("Statistics Config...", StatisticsConfigItem_Click),
-                    new MenuItem("-"),
-                    CreateMenuItem("Share Server Config...", new EventHandler(this.QRCodeItem_Click)),
-                    CreateMenuItem("Scan QRCode from Screen...", new EventHandler(this.ScanQRCodeItem_Click)),
-                    CreateMenuItem("Import URL from Clipboard...", new EventHandler(this.ImportURLItem_Click))
-                }),
+                //this.ServersItem = CreateMenuGroup("Servers", new MenuItem[] {
+                //    this.SeperatorItem = new MenuItem("-"),
+                //    //this.ConfigItem = CreateMenuItem("Edit Servers...", new EventHandler(this.Config_Click)),
+                //    CreateMenuItem("Statistics Config...", StatisticsConfigItem_Click),
+                //    new MenuItem("-"),
+                //    //CreateMenuItem("Share Server Config...", new EventHandler(this.QRCodeItem_Click)),
+                //    CreateMenuItem("Scan QRCode from Screen...", new EventHandler(this.ScanQRCodeItem_Click)),
+                //    CreateMenuItem("Import URL from Clipboard...", new EventHandler(this.ImportURLItem_Click))
+                //}),
                 CreateMenuGroup("PAC ", new MenuItem[] {
                     this.localPACItem = CreateMenuItem("Local PAC", new EventHandler(this.LocalPACItem_Click)),
                     this.onlinePACItem = CreateMenuItem("Online PAC", new EventHandler(this.OnlinePACItem_Click)),
@@ -283,7 +283,7 @@ namespace Shadowsocks.View
                     CreateMenuItem("Copy Local PAC URL", new EventHandler(this.CopyLocalPacUrlItem_Click)),
                     this.editOnlinePACItem = CreateMenuItem("Edit Online PAC URL...", new EventHandler(this.UpdateOnlinePACURLItem_Click)),
                 }),
-                this.proxyItem = CreateMenuItem("Forward Proxy...", new EventHandler(this.proxyItem_Click)),
+                //this.proxyItem = CreateMenuItem("Forward Proxy...", new EventHandler(this.proxyItem_Click)),
                 new MenuItem("-"),
                 this.AutoStartupItem = CreateMenuItem("Start on Boot", new EventHandler(this.AutoStartupItem_Click)),
                 this.ShareOverLANItem = CreateMenuItem("Allow Clients from LAN", new EventHandler(this.ShareOverLANItem_Click)),
@@ -292,13 +292,13 @@ namespace Shadowsocks.View
                 CreateMenuGroup("Help", new MenuItem[] {
                     CreateMenuItem("Show Logs...", new EventHandler(this.ShowLogItem_Click)),
                     this.VerboseLoggingToggleItem = CreateMenuItem( "Verbose Logging", new EventHandler(this.VerboseLoggingToggleItem_Click) ),
-                    CreateMenuGroup("Updates...", new MenuItem[] {
-                        CreateMenuItem("Check for Updates...", new EventHandler(this.checkUpdatesItem_Click)),
-                        new MenuItem("-"),
-                        this.autoCheckUpdatesToggleItem = CreateMenuItem("Check for Updates at Startup", new EventHandler(this.autoCheckUpdatesToggleItem_Click)),
-                        this.checkPreReleaseToggleItem = CreateMenuItem("Check Pre-release Version", new EventHandler(this.checkPreReleaseToggleItem_Click)),
-                    }),
-                    CreateMenuItem("About...", new EventHandler(this.AboutItem_Click)),
+                    //CreateMenuGroup("Updates...", new MenuItem[] {
+                    //    CreateMenuItem("Check for Updates...", new EventHandler(this.checkUpdatesItem_Click)),
+                    //    new MenuItem("-"),
+                    //    this.autoCheckUpdatesToggleItem = CreateMenuItem("Check for Updates at Startup", new EventHandler(this.autoCheckUpdatesToggleItem_Click)),
+                    //    this.checkPreReleaseToggleItem = CreateMenuItem("Check Pre-release Version", new EventHandler(this.checkPreReleaseToggleItem_Click)),
+                    //}),
+                    //CreateMenuItem("About...", new EventHandler(this.AboutItem_Click)),
                 }),
                 new MenuItem("-"),
                 CreateMenuItem("Quit", new EventHandler(this.Quit_Click))
@@ -417,42 +417,37 @@ namespace Shadowsocks.View
 
         private void UpdateServersMenu()
         {
-            var items = ServersItem.MenuItems;
-            while (items[0] != SeperatorItem)
-            {
-                items.RemoveAt(0);
-            }
-            int i = 0;
-            foreach (var strategy in controller.GetStrategies())
-            {
-                MenuItem item = new MenuItem(strategy.Name);
-                item.Tag = strategy.ID;
-                item.Click += AStrategyItem_Click;
-                items.Add(i, item);
-                i++;
-            }
+            //var items = ServersItem.MenuItems;
+            //while (items[0] != SeperatorItem) {
+            //    items.RemoveAt(0);
+            //}
+            //int i = 0;
+            //foreach (var strategy in controller.GetStrategies()) {
+            //    MenuItem item = new MenuItem(strategy.Name);
+            //    item.Tag = strategy.ID;
+            //    item.Click += AStrategyItem_Click;
+            //    items.Add(i, item);
+            //    i++;
+            //}
 
-            // user wants a seperator item between strategy and servers menugroup
-            items.Add( i++, new MenuItem("-") );
+            //// user wants a seperator item between strategy and servers menugroup
+            //items.Add(i++, new MenuItem("-"));
 
-            int strategyCount = i;
-            Configuration configuration = controller.GetConfigurationCopy();
-            foreach (var server in configuration.configs)
-            {
-                MenuItem item = new MenuItem(server.FriendlyName());
-                item.Tag = i - strategyCount;
-                item.Click += AServerItem_Click;
-                items.Add(i, item);
-                i++;
-            }
+            //int strategyCount = i;
+            //Configuration configuration = controller.GetConfigurationCopy();
+            //foreach (var server in configuration.configs) {
+            //    MenuItem item = new MenuItem(server.FriendlyName());
+            //    item.Tag = i - strategyCount;
+            //    item.Click += AServerItem_Click;
+            //    items.Add(i, item);
+            //    i++;
+            //}
 
-            foreach (MenuItem item in items)
-            {
-                if (item.Tag != null && (item.Tag.ToString() == configuration.index.ToString() || item.Tag.ToString() == configuration.strategy))
-                {
-                    item.Checked = true;
-                }
-            }
+            //foreach (MenuItem item in items) {
+            //    if (item.Tag != null && (item.Tag.ToString() == configuration.index.ToString() || item.Tag.ToString() == configuration.strategy)) {
+            //        item.Checked = true;
+            //    }
+            //}
         }
 
         private void ShowConfigForm()
@@ -571,15 +566,15 @@ namespace Shadowsocks.View
 
         private void ShowFirstTimeBalloon()
         {
-            _notifyIcon.BalloonTipTitle = I18N.GetString("Shadowsocks is here");
-            _notifyIcon.BalloonTipText = I18N.GetString("You can turn on/off Shadowsocks in the context menu");
+            _notifyIcon.BalloonTipTitle = I18N.GetString("SSVPN is here");
+            _notifyIcon.BalloonTipText = I18N.GetString("You can turn on/off SSVPN in the context menu");
             _notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
             _notifyIcon.ShowBalloonTip(0);
         }
 
         private void AboutItem_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/shadowsocks/shadowsocks-windows");
+            //Process.Start("https://github.com/shadowsocks/shadowsocks-windows");
         }
 
         private void notifyIcon1_Click(object sender, MouseEventArgs e)
@@ -851,9 +846,9 @@ namespace Shadowsocks.View
 
         private void UpdateUpdateMenu()
         {
-            Configuration configuration = controller.GetConfigurationCopy();
-            autoCheckUpdatesToggleItem.Checked = configuration.autoCheckUpdate;
-            checkPreReleaseToggleItem.Checked = configuration.checkPreRelease;
+            //Configuration configuration = controller.GetConfigurationCopy();
+            //autoCheckUpdatesToggleItem.Checked = configuration.autoCheckUpdate;
+            //checkPreReleaseToggleItem.Checked = configuration.checkPreRelease;
         }
 
         private void autoCheckUpdatesToggleItem_Click(object sender, EventArgs e)

@@ -63,7 +63,7 @@ namespace Shadowsocks.Model
         public Server()
         {
             server = "";
-            server_port = 8388;
+            server_port = 2018;
             method = "aes-256-cfb";
             password = "";
             remarks = "";
