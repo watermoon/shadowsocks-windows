@@ -46,7 +46,7 @@ namespace Shadowsocks.Controller
 
         public static string GetString(string key)
         {
-            key = key.Replace("Shadowsocks", "SSVNPN");
+            key = key.Replace("Shadowsocks", "SSVPN");
             return _strings.ContainsKey(key)
                 ? _strings[key]
                 : key;

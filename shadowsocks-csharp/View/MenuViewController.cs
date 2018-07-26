@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define ADMIN // 是否开启全功能模式
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -263,15 +265,17 @@ namespace Shadowsocks.View
                     this.PACModeItem = CreateMenuItem("PAC", new EventHandler(this.PACModeItem_Click)),
                     this.globalModeItem = CreateMenuItem("Global", new EventHandler(this.GlobalModeItem_Click))
                 }),
-                //this.ServersItem = CreateMenuGroup("Servers", new MenuItem[] {
-                //    this.SeperatorItem = new MenuItem("-"),
-                //    //this.ConfigItem = CreateMenuItem("Edit Servers...", new EventHandler(this.Config_Click)),
-                //    CreateMenuItem("Statistics Config...", StatisticsConfigItem_Click),
-                //    new MenuItem("-"),
-                //    //CreateMenuItem("Share Server Config...", new EventHandler(this.QRCodeItem_Click)),
-                //    CreateMenuItem("Scan QRCode from Screen...", new EventHandler(this.ScanQRCodeItem_Click)),
-                //    CreateMenuItem("Import URL from Clipboard...", new EventHandler(this.ImportURLItem_Click))
-                //}),
+#if ADMIN
+                this.ServersItem = CreateMenuGroup("Servers", new MenuItem[] {
+                    this.SeperatorItem = new MenuItem("-"),
+                    this.ConfigItem = CreateMenuItem("Edit Servers...", new EventHandler(this.Config_Click)),
+                    CreateMenuItem("Statistics Config...", StatisticsConfigItem_Click),
+                    new MenuItem("-"),
+                    CreateMenuItem("Share Server Config...", new EventHandler(this.QRCodeItem_Click)),
+                    CreateMenuItem("Scan QRCode from Screen...", new EventHandler(this.ScanQRCodeItem_Click)),
+                    CreateMenuItem("Import URL from Clipboard...", new EventHandler(this.ImportURLItem_Click))
+                }),
+#endif
                 CreateMenuGroup("PAC ", new MenuItem[] {
                     this.localPACItem = CreateMenuItem("Local PAC", new EventHandler(this.LocalPACItem_Click)),
                     this.onlinePACItem = CreateMenuItem("Online PAC", new EventHandler(this.OnlinePACItem_Click)),
@@ -283,7 +287,9 @@ namespace Shadowsocks.View
                     CreateMenuItem("Copy Local PAC URL", new EventHandler(this.CopyLocalPacUrlItem_Click)),
                     this.editOnlinePACItem = CreateMenuItem("Edit Online PAC URL...", new EventHandler(this.UpdateOnlinePACURLItem_Click)),
                 }),
-                //this.proxyItem = CreateMenuItem("Forward Proxy...", new EventHandler(this.proxyItem_Click)),
+#if ADMIN
+                this.proxyItem = CreateMenuItem("Forward Proxy...", new EventHandler(this.proxyItem_Click)),
+#endif
                 new MenuItem("-"),
                 this.AutoStartupItem = CreateMenuItem("Start on Boot", new EventHandler(this.AutoStartupItem_Click)),
                 this.ShareOverLANItem = CreateMenuItem("Allow Clients from LAN", new EventHandler(this.ShareOverLANItem_Click)),
@@ -292,20 +298,22 @@ namespace Shadowsocks.View
                 CreateMenuGroup("Help", new MenuItem[] {
                     CreateMenuItem("Show Logs...", new EventHandler(this.ShowLogItem_Click)),
                     this.VerboseLoggingToggleItem = CreateMenuItem( "Verbose Logging", new EventHandler(this.VerboseLoggingToggleItem_Click) ),
-                    //CreateMenuGroup("Updates...", new MenuItem[] {
-                    //    CreateMenuItem("Check for Updates...", new EventHandler(this.checkUpdatesItem_Click)),
-                    //    new MenuItem("-"),
-                    //    this.autoCheckUpdatesToggleItem = CreateMenuItem("Check for Updates at Startup", new EventHandler(this.autoCheckUpdatesToggleItem_Click)),
-                    //    this.checkPreReleaseToggleItem = CreateMenuItem("Check Pre-release Version", new EventHandler(this.checkPreReleaseToggleItem_Click)),
-                    //}),
-                    //CreateMenuItem("About...", new EventHandler(this.AboutItem_Click)),
+#if ADMIN
+                    CreateMenuGroup("Updates...", new MenuItem[] {
+                        CreateMenuItem("Check for Updates...", new EventHandler(this.checkUpdatesItem_Click)),
+                        new MenuItem("-"),
+                        this.autoCheckUpdatesToggleItem = CreateMenuItem("Check for Updates at Startup", new EventHandler(this.autoCheckUpdatesToggleItem_Click)),
+                        this.checkPreReleaseToggleItem = CreateMenuItem("Check Pre-release Version", new EventHandler(this.checkPreReleaseToggleItem_Click)),
+                    }),
+                    CreateMenuItem("About...", new EventHandler(this.AboutItem_Click)),
+#endif
                 }),
                 new MenuItem("-"),
                 CreateMenuItem("Quit", new EventHandler(this.Quit_Click))
             });
         }
 
-        #endregion
+#endregion
 
         private void controller_ConfigChanged(object sender, EventArgs e)
         {
@@ -417,37 +425,39 @@ namespace Shadowsocks.View
 
         private void UpdateServersMenu()
         {
-            //var items = ServersItem.MenuItems;
-            //while (items[0] != SeperatorItem) {
-            //    items.RemoveAt(0);
-            //}
-            //int i = 0;
-            //foreach (var strategy in controller.GetStrategies()) {
-            //    MenuItem item = new MenuItem(strategy.Name);
-            //    item.Tag = strategy.ID;
-            //    item.Click += AStrategyItem_Click;
-            //    items.Add(i, item);
-            //    i++;
-            //}
+#if ADMIN
+            var items = ServersItem.MenuItems;
+                while (items[0] != SeperatorItem) {
+                    items.RemoveAt(0);
+                }
+                int i = 0;
+                foreach (var strategy in controller.GetStrategies()) {
+                    MenuItem item = new MenuItem(strategy.Name);
+                    item.Tag = strategy.ID;
+                    item.Click += AStrategyItem_Click;
+                    items.Add(i, item);
+                    i++;
+                }
 
-            //// user wants a seperator item between strategy and servers menugroup
-            //items.Add(i++, new MenuItem("-"));
+                // user wants a seperator item between strategy and servers menugroup
+                items.Add(i++, new MenuItem("-"));
 
-            //int strategyCount = i;
-            //Configuration configuration = controller.GetConfigurationCopy();
-            //foreach (var server in configuration.configs) {
-            //    MenuItem item = new MenuItem(server.FriendlyName());
-            //    item.Tag = i - strategyCount;
-            //    item.Click += AServerItem_Click;
-            //    items.Add(i, item);
-            //    i++;
-            //}
+                int strategyCount = i;
+                Configuration configuration = controller.GetConfigurationCopy();
+                foreach (var server in configuration.configs) {
+                    MenuItem item = new MenuItem(server.FriendlyName());
+                    item.Tag = i - strategyCount;
+                    item.Click += AServerItem_Click;
+                    items.Add(i, item);
+                    i++;
+                }
 
-            //foreach (MenuItem item in items) {
-            //    if (item.Tag != null && (item.Tag.ToString() == configuration.index.ToString() || item.Tag.ToString() == configuration.strategy)) {
-            //        item.Checked = true;
-            //    }
-            //}
+                foreach (MenuItem item in items) {
+                    if (item.Tag != null && (item.Tag.ToString() == configuration.index.ToString() || item.Tag.ToString() == configuration.strategy)) {
+                        item.Checked = true;
+                    }
+                }
+#endif
         }
 
         private void ShowConfigForm()
